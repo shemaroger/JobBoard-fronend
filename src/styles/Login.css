@@ -1,0 +1,14 @@
+.login {
+    text-align: center;
+    margin: 20px;
+}
+
+.login form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login label {
+    margin: 10px 0;
+}
