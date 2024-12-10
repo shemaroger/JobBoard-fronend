@@ -8,6 +8,7 @@ import Signup from "./components/Signup";
 import RoleList from "./components/roles/RoleList";
 import AddRole from "./components/roles/AddRole";
 import RoleDetail from "./components/roles/RoleDetail";
+import AdminDashboard from "./components/roles/AdminDashboard";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/roles" element={<RoleList />} />
           <Route path="/roles/add" element={<AddRole />} />
           <Route path="/roles/:id" element={<RoleDetail />} />
