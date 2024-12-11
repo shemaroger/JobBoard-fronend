@@ -1,14 +1,21 @@
-.signup {
-    text-align: center;
-    margin: 20px;
+/* Signup.css */
+.signup .error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
-.signup form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.signup .success {
+    color: green;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
-.signup label {
-    margin: 10px 0;
+.signup input.invalid {
+    border: 1px solid red;
+}
+
+.signup button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
