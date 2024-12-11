@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../styles/Signup.css';
 
 function Signup() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -8,72 +7,62 @@ function Signup() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    console.log(`Field changed: ${e.target.name}, Value: ${e.target.value}`);
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrorMessage(''); // Clear error on change
   };
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValid = emailRegex.test(email);
-    console.log(`Validating email: ${email}, Result: ${isValid}`);
-    return isValid;
+    return emailRegex.test(email);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Form submitted:', formData);
-
     if (!formData.username.trim()) {
       setErrorMessage('Username is required.');
-      console.log('Validation error: Username is required.');
       return;
     }
 
     if (!validateEmail(formData.email)) {
       setErrorMessage('Invalid email address.');
-      console.log('Validation error: Invalid email address.');
       return;
     }
 
     if (formData.password.length < 6) {
       setErrorMessage('Password must be at least 6 characters long.');
-      console.log('Validation error: Password too short.');
       return;
     }
 
     setIsLoading(true); // Start loading
-    console.log('Sending signup request to the server...');
 
     try {
-      const response = await fetch('/api/users/add', {
+      const response = await fetch('http://localhost:8080/api/users/add', { // Update with correct URL
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           name: formData.username,
           email: formData.email,
           password: formData.password,
-          role: { id: 2 }, // Replace with the default role ID
+          role: { id: 2 }, // Set default role to 'User' (ID 2)
         }),
       });
 
       if (response.ok) {
-        console.log('Signup successful:', formData);
         setSuccessMessage('Signup successful!');
         setFormData({ username: '', email: '', password: '' });
         setErrorMessage('');
       } else {
         const data = await response.json();
-        console.error('Signup failed:', data.message || 'Unknown error');
         setErrorMessage(data.message || 'Signup failed. Please try again.');
       }
     } catch (error) {
-      console.error('An error occurred during signup:', error);
+      console.error('Error:', error); // Log the error for debugging
       setErrorMessage('An error occurred. Please try again.');
     } finally {
       setIsLoading(false); // Stop loading
-      console.log('Signup process complete.');
     }
   };
 
