@@ -4,8 +4,11 @@ import '../styles/Home.css';
 function Home() {
   return (
     <div className="home">
-      <h1>Welcome to Job Board</h1>
-      <p>Find your dream job today!</p>
+      <div className="hero-section">
+        <h1>Your Dream Job Awaits</h1>
+        <p>Explore thousands of job opportunities tailored to your skills.</p>
+        <button className="explore-button">Explore Jobs</button>
+      </div>
     </div>
   );
 }

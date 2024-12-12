@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/Signup.css'; // Import custom styles
 
 function Signup() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -37,7 +39,7 @@ function Signup() {
     setIsLoading(true); // Start loading
 
     try {
-      const response = await fetch('http://localhost:8080/api/users/add', { // Update with correct URL
+      const response = await fetch('http://localhost:8080/api/users/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,12 +48,12 @@ function Signup() {
           name: formData.username,
           email: formData.email,
           password: formData.password,
-          role: { id: 2 }, // Set default role to 'User' (ID 2)
+          role: { id: 2 }, // Default role: 'User'
         }),
       });
 
       if (response.ok) {
-        setSuccessMessage('Signup successful!');
+        setSuccessMessage('Signup successful! Please log in.');
         setFormData({ username: '', email: '', password: '' });
         setErrorMessage('');
       } else {
@@ -67,48 +69,58 @@ function Signup() {
   };
 
   return (
-    <div className="signup">
-      <h2>Signup</h2>
-      {errorMessage && <p className="error">{errorMessage}</p>}
-      {successMessage && <p className="success">{successMessage}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            className={errorMessage.includes('Username') ? 'invalid' : ''}
-            required
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={errorMessage.includes('email') ? 'invalid' : ''}
-            required
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className={errorMessage.includes('Password') ? 'invalid' : ''}
-            required
-          />
-        </label>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Signing up...' : 'Signup'}
-        </button>
-      </form>
+    <div className="signup-container">
+      <div className="signup-form">
+        <h2>Create an Account</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+        <form onSubmit={handleSubmit}>
+          <label>
+            Username:
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className={errorMessage.includes('Username') ? 'invalid' : ''}
+              required
+            />
+          </label>
+          <label>
+            Email:
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={errorMessage.includes('email') ? 'invalid' : ''}
+              required
+            />
+          </label>
+          <label>
+            Password:
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className={errorMessage.includes('Password') ? 'invalid' : ''}
+              required
+            />
+          </label>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Signing up...' : 'Signup'}
+          </button>
+        </form>
+        <div className="additional-links">
+          <p>
+            Already have an account? <Link to="/login">Log in</Link>
+          </p>
+          <p>
+            Forgot your password? <Link to="/forgot-password">Reset it</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
