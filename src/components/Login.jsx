@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome
 import '../styles/Login.css';
 
 function Login() {
@@ -7,38 +9,33 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Handle form data change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrorMessage(''); // Clear error on change
   };
 
-  // Validate email format
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate email
     if (!validateEmail(formData.email)) {
       setErrorMessage('Please enter a valid email.');
       return;
     }
 
-    // Validate password (e.g., minimum length)
     if (formData.password.length < 6) {
       setErrorMessage('Password must be at least 6 characters.');
       return;
     }
 
-    setIsLoading(true); // Show loading state
+    setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/login', { // Backend URL for login
+      const response = await fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +51,6 @@ function Login() {
         setSuccessMessage('Login successful!');
         setFormData({ email: '', password: '' });
         setErrorMessage('');
-        // Handle success (e.g., store token or redirect)
         console.log('Logged in successfully:', data);
       } else {
         const data = await response.json();
@@ -64,40 +60,78 @@ function Login() {
       console.error('Error:', error);
       setErrorMessage('An error occurred. Please try again later.');
     } finally {
-      setIsLoading(false); // Hide loading state
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="login">
-      <h2>Login</h2>
-      {errorMessage && <p className="error">{errorMessage}</p>}
-      {successMessage && <p className="success">{successMessage}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </label>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+    <div className="login-container d-flex align-items-center justify-content-center vh-100">
+      <div className="card p-4 shadow-sm" style={{ width: '100%', maxWidth: '400px' }}>
+        <h2 className="text-center mb-4">Login</h2>
+        {errorMessage && (
+          <div className="alert alert-danger">
+            <i className="fa fa-exclamation-circle me-2"></i>
+            {errorMessage}
+          </div>
+        )}
+        {successMessage && (
+          <div className="alert alert-success">
+            <i className="fa fa-check-circle me-2"></i>
+            {successMessage}
+          </div>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label">Email</label>
+            <div className="input-group">
+              <span className="input-group-text"><i className="fa fa-envelope"></i></span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label">Password</label>
+            <div className="input-group">
+              <span className="input-group-text"><i className="fa fa-lock"></i></span>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                className="form-control"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <><i className="fa fa-spinner fa-spin me-2"></i>Logging in...</>
+            ) : (
+              'Login'
+            )}
+          </button>
+        </form>
+        <div className="mt-3 text-center">
+          <p className="small">
+            Don't have an account? <a href="/signup" className="text-primary">Sign Up</a>
+          </p>
+          <p className="small">
+            <a href="/forgot-password" className="text-secondary">Forgot Password?</a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
