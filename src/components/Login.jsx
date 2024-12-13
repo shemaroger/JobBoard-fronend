@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome
 import '../styles/Login.css';
@@ -8,6 +9,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,6 +54,9 @@ function Login() {
         setFormData({ email: '', password: '' });
         setErrorMessage('');
         console.log('Logged in successfully:', data);
+
+        // Redirect to /admin after successful login
+        navigate('/admin');
       } else {
         const data = await response.json();
         setErrorMessage(data.message || 'Login failed. Please check your credentials.');
