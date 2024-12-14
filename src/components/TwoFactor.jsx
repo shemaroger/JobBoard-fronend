@@ -12,42 +12,42 @@ function TwoFactor() {
 
   const handleTokenChange = (e) => {
     setToken(e.target.value);
-    setErrorMessage('');
+    setErrorMessage(''); // Clear error on token change
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:8080/api/users/validate-2fa', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          token: token,
-        }),
-      });
+  try {
+    const response = await fetch('http://localhost:8080/api/users/validate-2fa', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        token: token,
+      }),
+    });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('2FA validated:', data);
-
-        // Redirect to dashboard or home after successful validation
-        navigate('/admin');
-      } else {
-        const data = await response.json();
-        setErrorMessage(data.message || 'Invalid or expired token.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setErrorMessage('An error occurred. Please try again later.');
-    } finally {
-      setIsLoading(false);
+    if (response.ok) {
+      const data = await response.json();
+      console.log('2FA validated:', data);
+      navigate('/admin');
+    } else {
+      const data = await response.json();
+      setErrorMessage(data.message || 'Invalid or expired token.');
+      console.error('Response error:', data); // Log the error details
     }
-  };
+  } catch (error) {
+    console.error('Request failed:', error); // Log the error details
+    setErrorMessage('An error occurred. Please try again later.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="container mt-5">
