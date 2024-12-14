@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     e.preventDefault(); // Prevent form submission
 
     try {
-      const response = await fetch("http://localhost:8083/api/users/forgot-password", {
+      const response = await fetch("http://localhost:8080/api/users/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

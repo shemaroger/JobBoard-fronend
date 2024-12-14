@@ -5,10 +5,13 @@ import Footer from "./components/Footer";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import ForgetPassword from "./components/ForgetPassword";
+import ResetPassword from "./components/ResetPassword";
 import RoleList from "./components/roles/RoleList";
 import AddRole from "./components/roles/AddRole";
 import RoleDetail from "./components/roles/RoleDetail";
 import AdminDashboard from "./components/roles/AdminDashboard";
+
 
 function App() {
   return (
@@ -23,6 +26,8 @@ function App() {
           <Route path="/roles" element={<RoleList />} />
           <Route path="/roles/add" element={<AddRole />} />
           <Route path="/roles/:id" element={<RoleDetail />} />
+          <Route path="/forgot-password" element={<ForgetPassword/>}/>
+          <Route path="/reset-password" element={< ResetPassword/>}/>
         </Routes>
         <Footer />
       </div>
