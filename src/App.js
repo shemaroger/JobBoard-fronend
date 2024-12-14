@@ -27,7 +27,7 @@ function App() {
           <Route path="/roles/add" element={<AddRole />} />
           <Route path="/roles/:id" element={<RoleDetail />} />
           <Route path="/forgot-password" element={<ForgetPassword/>}/>
-          <Route path="/reset-password" element={< ResetPassword/>}/>
+          <Route path="/resetpassword" element={< ResetPassword/>}/>
         </Routes>
         <Footer />
       </div>
