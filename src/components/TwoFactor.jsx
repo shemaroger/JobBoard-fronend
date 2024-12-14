@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function TwoFactor() {
@@ -8,46 +8,68 @@ function TwoFactor() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { email } = location.state || {}; // Retrieve email from state passed via navigation
+  const { email } = location.state || {}; // Retrieve email from state
+
+  useEffect(() => {
+    if (!email) {
+      // If no email is present, redirect back to login
+      navigate('/login');
+    }
+    document.getElementById('token').focus();
+  }, [email, navigate]);
 
   const handleTokenChange = (e) => {
     setToken(e.target.value);
-    setErrorMessage(''); // Clear error on token change
+    setErrorMessage('');
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await fetch('http://localhost:8080/api/users/validate-2fa', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email,
-        token: token,
-      }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log('2FA validated:', data);
-      navigate('/admin');
-    } else {
-      const data = await response.json();
-      setErrorMessage(data.message || 'Invalid or expired token.');
-      console.error('Response error:', data); // Log the error details
+    if (!token || token.length < 6) {
+      setErrorMessage('Token must be at least 6 characters.');
+      return;
     }
-  } catch (error) {
-    console.error('Request failed:', error); // Log the error details
-    setErrorMessage('An error occurred. Please try again later.');
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:8080/api/users/validate-2fa', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important for handling cookies/sessions
+        body: JSON.stringify({ email, token }),
+      });
+
+      // Log the raw response for debugging
+      console.log('Raw Response:', response);
+
+      const data = await response.text(); // Try to get text first
+      console.log('Response Data:', data);
+
+      if (response.ok) {
+        console.log('2FA validated successfully');
+        navigate('/admin');
+      } else {
+        // Try to parse as JSON if possible
+        let errorData;
+        try {
+          errorData = JSON.parse(data);
+        } catch (parseError) {
+          errorData = { message: data || 'Unknown error occurred' };
+        }
+        
+        setErrorMessage(errorData.message || 'Invalid or expired token.');
+        console.error('Validation Error:', errorData);
+      }
+    } catch (error) {
+      console.error('Network or Request Error:', error);
+      setErrorMessage(`Network error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="container mt-5">
