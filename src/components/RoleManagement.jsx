@@ -13,7 +13,7 @@ function RoleManagement() {
 
   const fetchRoles = async () => {
     try {
-      const response = await axios.get('/api/roles/all');
+      const response = await axios.get('http://localhost:8080/api/roles/all');
       setRoles(response.data);
     } catch (error) {
       console.error('Error fetching roles:', error);
@@ -22,7 +22,7 @@ function RoleManagement() {
 
   const handleAddRole = async () => {
     try {
-      await axios.post('/api/roles/add', { name: newRole });
+      await axios.post('http://localhost:8080/api/roles/add', { name: newRole });
       setNewRole('');
       fetchRoles();
     } catch (error) {
@@ -32,7 +32,7 @@ function RoleManagement() {
 
   const handleEditRole = async (id) => {
     try {
-      await axios.put(`/api/roles/${id}`, { name: editRoleName });
+      await axios.put(`http://localhost:8080/api/roles/${id}`, { name: editRoleName });
       setEditRoleId(null);
       setEditRoleName('');
       fetchRoles();
@@ -43,7 +43,7 @@ function RoleManagement() {
 
   const handleDeleteRole = async (id) => {
     try {
-      await axios.delete(`/api/roles/${id}`);
+      await axios.delete(`http://localhost:8080/api/roles/${id}`);
       fetchRoles();
     } catch (error) {
       console.error('Error deleting role:', error);
