@@ -36,7 +36,7 @@ function App() {
           <Route path="/resetpassword" element={< ResetPassword/>}/>
           <Route path="/two-factor" element={<TwoFactor />} />
           <Route path="/admin/roles" element={<RoleManagement />} />
-          <Route path="/admin/users" component={ManageUsers} />
+          <Route path="/admin/user" element={<ManageUsers />}/>
           <Route path="/admin/users/create" component={CreateUser} />
           <Route path="/admin/users/edit/:id" component={EditUser} />
           {/* <Route path="/dashboard" element={<AdminDashboard />} /> */}

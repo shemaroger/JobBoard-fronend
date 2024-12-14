@@ -19,7 +19,7 @@ function AdminDashboard() {
         <nav>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
             <li>
-              <Link to="/admin/users" style={linkStyle}>
+              <Link to="/admin/user" style={linkStyle}>
                 Manage Users
               </Link>
             </li>
