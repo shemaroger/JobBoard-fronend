@@ -55,8 +55,8 @@ function Login() {
         setErrorMessage('');
         console.log('Logged in successfully:', data);
 
-        // Redirect to /admin after successful login
-        navigate('/admin');
+        // Redirect to the 2FA form
+        navigate('/two-factor', { state: { email: formData.email } });
       } else {
         const data = await response.json();
         setErrorMessage(data.message || 'Login failed. Please check your credentials.');

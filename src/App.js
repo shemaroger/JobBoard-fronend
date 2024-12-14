@@ -11,6 +11,8 @@ import RoleList from "./components/roles/RoleList";
 import AddRole from "./components/roles/AddRole";
 import RoleDetail from "./components/roles/RoleDetail";
 import AdminDashboard from "./components/roles/AdminDashboard";
+import TwoFactor from './components/TwoFactor';
+// import AdminDashboards from './components/AdminDashboard'; 
 
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Route path="/roles/:id" element={<RoleDetail />} />
           <Route path="/forgot-password" element={<ForgetPassword/>}/>
           <Route path="/resetpassword" element={< ResetPassword/>}/>
+          <Route path="/two-factor" element={<TwoFactor />} />
+          {/* <Route path="/dashboard" element={<AdminDashboard />} /> */}
         </Routes>
         <Footer />
       </div>
