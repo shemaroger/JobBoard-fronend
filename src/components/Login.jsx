@@ -16,21 +16,49 @@ function Login() {
     setErrorMessage(''); // Clear error on change
   };
 
+  // Validate email using regex
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
+  // Validate password for minimum length and complexity
+  const validatePassword = (password) => {
+    const minLength = 6;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return (
+      password.length >= minLength &&
+      hasUppercase &&
+      hasLowercase &&
+      hasNumber &&
+      hasSpecialChar
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Email validation
     if (!validateEmail(formData.email)) {
       setErrorMessage('Please enter a valid email.');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters.');
+    // Password validation
+    if (!validatePassword(formData.password)) {
+      setErrorMessage(
+        'Password must be at least 6 characters, contain a mix of uppercase, lowercase, numbers, and special characters.'
+      );
+      return;
+    }
+
+    // Check if password field is empty
+    if (!formData.password) {
+      setErrorMessage('Password cannot be empty.');
       return;
     }
 
