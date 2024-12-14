@@ -12,6 +12,10 @@ import AddRole from "./components/roles/AddRole";
 import RoleDetail from "./components/roles/RoleDetail";
 import AdminDashboard from "./components/AdminDashboard";
 import TwoFactor from './components/TwoFactor';
+import RoleManagement from './components/RoleManagement';
+import ManageUsers from './components/ManageUsers';
+import CreateUser from './components/CreateUser';
+import EditUser from './components/EditUser';
 // import AdminDashboards from './components/AdminDashboard'; 
 
 
@@ -31,6 +35,10 @@ function App() {
           <Route path="/forgot-password" element={<ForgetPassword/>}/>
           <Route path="/resetpassword" element={< ResetPassword/>}/>
           <Route path="/two-factor" element={<TwoFactor />} />
+          <Route path="/admin/roles" element={<RoleManagement />} />
+          <Route path="/admin/users" component={ManageUsers} />
+          <Route path="/admin/users/create" component={CreateUser} />
+          <Route path="/admin/users/edit/:id" component={EditUser} />
           {/* <Route path="/dashboard" element={<AdminDashboard />} /> */}
         </Routes>
         <Footer />
