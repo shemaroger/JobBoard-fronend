@@ -1,89 +1,66 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Col, Row } from 'react-bootstrap';
-import './AdminDashboard.css'; // Add custom styles if needed
 
-const AdminDashboard = () => {
+function AdminDashboard() {
   return (
-    <div className="container-fluid">
-      <div className="row">
-        {/* Sidebar */}
-        <div className="col-md-2 bg-dark text-white vh-100 p-3">
-          <h3 className="text-center">Admin Dashboard</h3>
-          <ul className="list-unstyled">
-            <li><Link to="/dashboard" className="text-white">Dashboard</Link></li>
-            <li><Link to="/manage-users" className="text-white">Manage Users</Link></li>
-            <li><Link to="/manage-books" className="text-white">Manage Books</Link></li>
-            <li><Link to="/settings" className="text-white">Settings</Link></li>
-            <li><Link to="/logout" className="text-white">Logout</Link></li>
+    <div style={{ display: 'flex', height: '100vh' }}>
+      {/* Sidebar */}
+      <div
+        style={{
+          width: '250px',
+          background: '#343a40',
+          color: '#fff',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <h2>Admin Dashboard</h2>
+        <nav>
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            <li>
+              <Link to="/admin/users" style={linkStyle}>
+                Manage Users
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/jobs" style={linkStyle}>
+                Manage Job Listings
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/roles" style={linkStyle}>
+                Manage Roles
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/reports" style={linkStyle}>
+                Reports
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/settings" style={linkStyle}>
+                Settings
+              </Link>
+            </li>
           </ul>
-        </div>
+        </nav>
+      </div>
 
-        {/* Main Content */}
-        <div className="col-md-10 p-4">
-          <h2>Welcome to the Admin Dashboard</h2>
-          <Row className="my-4">
-            {/* Cards for Stats */}
-            <Col md={4}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <h5 className="card-title">Total Users</h5>
-                  <p className="card-text">150</p>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <h5 className="card-title">Total Books</h5>
-                  <p className="card-text">200</p>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <h5 className="card-title">Pending Requests</h5>
-                  <p className="card-text">5</p>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-          <Row>
-            {/* Action Cards */}
-            <Col md={4}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <h5 className="card-title">Add New Book</h5>
-                  <p className="card-text">Click to add a new book to the inventory.</p>
-                  <Link to="/add-book" className="btn btn-primary">Add Book</Link>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <h5 className="card-title">View All Users</h5>
-                  <p className="card-text">Manage users registered on the platform.</p>
-                  <Link to="/manage-users" className="btn btn-primary">View Users</Link>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="shadow-sm">
-                <Card.Body>
-                  <h5 className="card-title">System Settings</h5>
-                  <p className="card-text">Manage platform settings.</p>
-                  <Link to="/settings" className="btn btn-primary">Go to Settings</Link>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </div>
+      {/* Main Content */}
+      <div style={{ flex: 1, background: '#f8f9fa', padding: '20px' }}>
+        <h1>Welcome to the Admin Dashboard</h1>
+        <p>Select an option from the menu to get started.</p>
       </div>
     </div>
   );
+}
+
+const linkStyle = {
+  color: '#fff',
+  textDecoration: 'none',
+  display: 'block',
+  padding: '10px 0',
 };
 
 export default AdminDashboard;

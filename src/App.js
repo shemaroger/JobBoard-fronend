@@ -10,7 +10,7 @@ import ResetPassword from "./components/ResetPassword";
 import RoleList from "./components/roles/RoleList";
 import AddRole from "./components/roles/AddRole";
 import RoleDetail from "./components/roles/RoleDetail";
-import AdminDashboard from "./components/roles/AdminDashboard";
+import AdminDashboard from "./components/AdminDashboard";
 import TwoFactor from './components/TwoFactor';
 // import AdminDashboards from './components/AdminDashboard'; 
 
