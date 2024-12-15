@@ -1,77 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function CreateUser() {
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
-    name: '',
-    role: '',
-  });
+const CreateUser = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
+    const [role, setRole] = useState('');
+    const [roles, setRoles] = useState([]);
+    const [message, setMessage] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  };
+    useEffect(() => {
+        // Fetch available roles from the backend
+        axios.get('http://localhost:8080/api/roles/all')
+            .then(response => {
+                setRoles(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the roles!', error);
+            });
+    }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post('http://localhost:8080/api/users/add', user)
-      .then((response) => {
-        alert('User created successfully');
-      })
-      .catch((error) => {
-        console.error('Error creating user:', error);
-      });
-  };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
-  return (
-    <div>
-      <h2>Create New User</h2>
-      <form onSubmit={handleSubmit}>
+        const userData = {
+            email,
+            password,
+            name,
+            role: {
+                id: role
+            }
+        };
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/users/add', userData);
+            setMessage(`User created successfully: ${response.data.email}`);
+        } catch (error) {
+            setMessage('Error creating user. Please try again.');
+            console.error('There was an error creating the user!', error);
+        }
+    };
+
+    return (
         <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            required
-          />
+            <h2>Create User</h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Email: </label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Password: </label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Name: </label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Role: </label>
+                    <select value={role} onChange={(e) => setRole(e.target.value)} required>
+                        <option value="">Select Role</option>
+                        {roles.map((role) => (
+                            <option key={role.id} value={role.id}>
+                                {role.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <button type="submit">Create User</button>
+            </form>
+            {message && <p>{message}</p>}
         </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            value={user.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={user.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Role</label>
-          <select name="role" value={user.role} onChange={handleChange}>
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-            {/* Add other roles here */}
-          </select>
-        </div>
-        <button type="submit">Create User</button>
-      </form>
-    </div>
-  );
-}
+    );
+};
 
 export default CreateUser;

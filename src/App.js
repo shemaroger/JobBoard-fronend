@@ -16,8 +16,6 @@ import RoleManagement from './components/RoleManagement';
 import ManageUsers from './components/ManageUsers';
 import CreateUser from './components/CreateUser';
 import EditUser from './components/EditUser';
-// import AdminDashboards from './components/AdminDashboard'; 
-
 
 function App() {
   return (
@@ -32,14 +30,13 @@ function App() {
           <Route path="/roles" element={<RoleList />} />
           <Route path="/roles/add" element={<AddRole />} />
           <Route path="/roles/:id" element={<RoleDetail />} />
-          <Route path="/forgot-password" element={<ForgetPassword/>}/>
-          <Route path="/resetpassword" element={< ResetPassword/>}/>
+          <Route path="/forgot-password" element={<ForgetPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/two-factor" element={<TwoFactor />} />
           <Route path="/admin/roles" element={<RoleManagement />} />
-          <Route path="/admin/user" element={<ManageUsers />}/>
-          <Route path="/admin/users/create" component={CreateUser} />
-          <Route path="/admin/users/edit/:id" component={EditUser} />
-          {/* <Route path="/dashboard" element={<AdminDashboard />} /> */}
+          <Route path="/admin/user" element={<ManageUsers />} />
+          <Route path="/admin/user/create" element={<CreateUser />} /> {/* Corrected JSX syntax */}
+          <Route path="/admin/user/edit/:id" element={<EditUser />} />  {/* Corrected JSX syntax */}
         </Routes>
         <Footer />
       </div>
