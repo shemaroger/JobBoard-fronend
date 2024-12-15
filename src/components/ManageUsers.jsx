@@ -1,17 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ChevronLeft, ChevronRight, LogOut, Home, Users, Briefcase, Shield, BarChart, Settings } from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/AdminDashboard.css'; // Ensure custom styles are consistent
+import '../styles/AdminDashboard.css';
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0); // Tracks the current page
-  const [totalPages, setTotalPages] = useState(0); // Total number of pages
-  const [pageSize, setPageSize] = useState(10); // Number of items per page
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const [error, setError] = useState(null);
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation(); // For active link highlighting
+
+  const menuItems = [
+    {
+      path: '/admin/dashboard',
+      label: 'Dashboard',
+      icon: <Home className="me-2" />,
+    },
+    {
+      path: '/admin/user',
+      label: 'Manage Users',
+      icon: <Users className="me-2" />,
+    },
+    {
+      path: '/admin/jobs',
+      label: 'Manage Job Listings',
+      icon: <Briefcase className="me-2" />,
+    },
+    {
+      path: '/admin/roles',
+      label: 'Manage Roles',
+      icon: <Shield className="me-2" />,
+    },
+    {
+      path: '/admin/reports',
+      label: 'Reports',
+      icon: <BarChart className="me-2" />,
+    },
+    {
+      path: '/admin/settings',
+      label: 'Settings',
+      icon: <Settings className="me-2" />,
+    },
+  ];
 
   useEffect(() => {
     fetchUsers(currentPage, pageSize);
@@ -53,10 +87,12 @@ function ManageUsers() {
   };
 
   return (
-    <div className="admin-dashboard">
+    <div className="admin-dashboard d-flex">
       {/* Sidebar */}
       <nav
-        className={`sidebar bg-dark ${isSidebarCollapsed ? 'collapsed' : ''} position-fixed vh-100`}
+        className={`sidebar bg-dark ${
+          isSidebarCollapsed ? 'collapsed' : ''
+        } position-fixed vh-100`}
       >
         <div className="d-flex flex-column align-items-center pt-3">
           <button
@@ -69,39 +105,23 @@ function ManageUsers() {
             <span className="logo">Admin</span>
           </h2>
           <ul className="nav flex-column w-100">
-            <li className="nav-item">
-              <Link to="/admin/dashboard" className="nav-link">
-                Dashboard
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/user" className="nav-link active">
-                Manage Users
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/jobs" className="nav-link">
-                Manage Job Listings
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/roles" className="nav-link">
-                Manage Roles
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/reports" className="nav-link">
-                Reports
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/admin/settings" className="nav-link">
-                Settings
-              </Link>
-            </li>
+            {menuItems.map((item) => (
+              <li key={item.path} className="nav-item">
+                <Link
+                  to={item.path}
+                  className={`nav-link ${
+                    location.pathname === item.path ? 'active' : ''
+                  }`}
+                >
+                  {item.icon}
+                  {!isSidebarCollapsed && item.label}
+                </Link>
+              </li>
+            ))}
             <li className="nav-item mt-auto">
               <Link to="/logout" className="nav-link text-danger">
-                Logout
+                <LogOut className="me-2" />
+                {!isSidebarCollapsed && 'Logout'}
               </Link>
             </li>
           </ul>
@@ -110,7 +130,9 @@ function ManageUsers() {
 
       {/* Main Content */}
       <main
-        className={`main-content ${isSidebarCollapsed ? 'expanded' : ''} col-md-9 ms-sm-auto col-lg-10 px-md-4`}
+        className={`main-content ${
+          isSidebarCollapsed ? 'expanded' : ''
+        } col-md-9 ms-sm-auto col-lg-10 px-md-4`}
       >
         <h2>Manage Users</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}

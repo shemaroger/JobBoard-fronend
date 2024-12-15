@@ -1,36 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome
 import '../styles/Login.css';
+
+// Service function for API calls
+const loginUser = async (email, password) => {
+  const response = await fetch('http://localhost:8080/api/users/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) throw new Error('Login failed');
+  return response.json();
+};
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const rolePaths = {
+    Admin: '/admin',
+    Employer: '/employer-dashboard',
+    User: '/user-dashboard',
+  };
+
+  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrorMessage(''); // Clear error on change
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  // Validate email format
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Email validation
     if (!validateEmail(formData.email)) {
       setErrorMessage('Please enter a valid email.');
       return;
     }
 
-    // Password validation
     if (formData.password.length < 6) {
       setErrorMessage('Password must be at least 6 characters.');
       return;
@@ -39,60 +55,35 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+      const data = await loginUser(formData.email, formData.password);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Response data:', data); // Debugging: Log the response data
-
-        // Check if 2FA is required
-        if (data.needs2FA) {
-          setSuccessMessage('Login successful! Please check your email for the 2FA code.');
-          setFormData({ email: '', password: '' });
-          setErrorMessage('');
-
-          // Redirect to the 2FA page
-          navigate('/two-factor', { state: { email: formData.email } });
-        } else {
-          // Successful login, check the user's role
-          const userRole = data.role; // Assuming the response includes the role
-          
-          setSuccessMessage('Login successful!');
-          setFormData({ email: '', password: '' });
-          setErrorMessage('');
-
-          // Redirect based on user role
-          if (userRole === 'Admin') {
-            navigate('/admin');  // Navigate to admin page
-          } else if (userRole === 'Employer') {
-            navigate('/employer-dashboard');  // Navigate to employer page
-          } else if (userRole === 'User') {
-            navigate('/user-dashboard');  // Navigate to user page
-          } else {
-            setErrorMessage('Unknown role. Please contact support.');
-          }
-        }
+      if (data.needs2FA) {
+        setSuccessMessage('Login successful! Please check your email for the 2FA code.');
+        navigate('/two-factor', { state: { email: formData.email } });
       } else {
-        const data = await response.json();
-        console.log('Login failed data:', data); // Debugging: Log the failure data
-        setErrorMessage(data.message || 'Login failed. Please check your credentials.');
+        const userRole = data.role;
+        if (rolePaths[userRole]) {
+          localStorage.setItem('authToken', data.token); // Store token
+          localStorage.setItem('userRole', userRole); // Store role
+          navigate(rolePaths[userRole]);
+        } else {
+          setErrorMessage('Unknown role. Please contact support.');
+        }
       }
     } catch (error) {
-      console.error('Error:', error);
-      setErrorMessage('An error occurred. Please try again later.');
+      setErrorMessage(error.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Automatically redirect if user is already logged in
+  useEffect(() => {
+    const storedRole = localStorage.getItem('userRole');
+    if (storedRole && rolePaths[storedRole]) {
+      navigate(rolePaths[storedRole]);
+    }
+  }, [navigate, rolePaths]);
 
   return (
     <div className="login-container d-flex align-items-center justify-content-center vh-100">
