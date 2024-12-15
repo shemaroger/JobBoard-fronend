@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/AdminDashboard.css'; // Ensure custom styles are consistent
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -8,6 +11,7 @@ function ManageUsers() {
   const [totalPages, setTotalPages] = useState(0); // Total number of pages
   const [pageSize, setPageSize] = useState(10); // Number of items per page
   const [error, setError] = useState(null);
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     fetchUsers(currentPage, pageSize);
@@ -27,24 +31,15 @@ function ManageUsers() {
   };
 
   const handleDeleteUser = (id) => {
-    // Confirm the delete action with a prompt (optional)
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      axios
-        .delete(`http://localhost:8080/api/users/${id}`)
-        .then((response) => {
-          if (response.status === 200) {
-            // Success: Update the users list by filtering out the deleted user
-            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-          } else {
-            setError('Failed to delete user. Please try again.');
-            console.error('Failed to delete user:', response);
-          }
-        })
-        .catch((error) => {
-          setError('Error deleting user. Please try again later.');
-          console.error('Error deleting user:', error);
-        });
-    }
+    axios
+      .delete(`http://localhost:8080/api/users/${id}`)
+      .then(() => {
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+      })
+      .catch((error) => {
+        setError('Error deleting user. Please try again later.');
+        console.error('Error deleting user:', error);
+      });
   };
 
   const handlePageChange = (newPage) => {
@@ -53,62 +48,140 @@ function ManageUsers() {
     }
   };
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
-    <div>
-      <h2>Manage Users</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div style={{ marginBottom: '20px' }}>
-        <Link to="/admin/user/create">
-          <button>Add New User</button>
-        </Link>
-      </div>
-      {users.length > 0 ? (
-        <table border="1" style={{ width: '100%', textAlign: 'left' }}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.email}</td>
-                <td>{user.name}</td>
-                <td>{user.role?.name || 'N/A'}</td>
-                <td>
-                  <Link to={`/admin/user/edit/${user.id}`}>Edit</Link> |{' '}
-                  <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                </td>
+    <div className="admin-dashboard">
+      {/* Sidebar */}
+      <nav
+        className={`sidebar bg-dark ${isSidebarCollapsed ? 'collapsed' : ''} position-fixed vh-100`}
+      >
+        <div className="d-flex flex-column align-items-center pt-3">
+          <button
+            className="btn btn-light btn-sm toggle-sidebar mb-3"
+            onClick={toggleSidebar}
+          >
+            {isSidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
+          </button>
+          <h2 className="text-white text-center mb-4">
+            <span className="logo">Admin</span>
+          </h2>
+          <ul className="nav flex-column w-100">
+            <li className="nav-item">
+              <Link to="/admin/dashboard" className="nav-link">
+                Dashboard
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/user" className="nav-link active">
+                Manage Users
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/jobs" className="nav-link">
+                Manage Job Listings
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/roles" className="nav-link">
+                Manage Roles
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/reports" className="nav-link">
+                Reports
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/admin/settings" className="nav-link">
+                Settings
+              </Link>
+            </li>
+            <li className="nav-item mt-auto">
+              <Link to="/logout" className="nav-link text-danger">
+                Logout
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main
+        className={`main-content ${isSidebarCollapsed ? 'expanded' : ''} col-md-9 ms-sm-auto col-lg-10 px-md-4`}
+      >
+        <h2>Manage Users</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        {/* Add New User Button */}
+        <div style={{ marginBottom: '20px' }}>
+          <Link to="/admin/user/create">
+            <button className="btn btn-primary">Add New User</button>
+          </Link>
+        </div>
+
+        {/* Users Table */}
+        {users.length > 0 ? (
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No users found.</p>
-      )}
-      {/* Pagination Controls */}
-      <div style={{ marginTop: '20px' }}>
-        <button
-          disabled={currentPage === 0}
-          onClick={() => handlePageChange(currentPage - 1)}
-        >
-          Previous
-        </button>
-        <span style={{ margin: '0 10px' }}>
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          disabled={currentPage === totalPages - 1}
-          onClick={() => handlePageChange(currentPage + 1)}
-        >
-          Next
-        </button>
-      </div>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.email}</td>
+                  <td>{user.name}</td>
+                  <td>{user.role?.name || 'N/A'}</td>
+                  <td>
+                    <Link to={`/admin/user/edit/${user.id}`} className="btn btn-sm btn-warning">
+                      Edit
+                    </Link>{' '}
+                    |{' '}
+                    <button
+                      onClick={() => handleDeleteUser(user.id)}
+                      className="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No users found.</p>
+        )}
+
+        {/* Pagination Controls */}
+        <div style={{ marginTop: '20px' }}>
+          <button
+            className="btn btn-outline-primary"
+            disabled={currentPage === 0}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+          <span style={{ margin: '0 10px' }}>
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <button
+            className="btn btn-outline-primary"
+            disabled={currentPage === totalPages - 1}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      </main>
     </div>
   );
 }
