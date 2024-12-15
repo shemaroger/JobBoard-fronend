@@ -21,66 +21,78 @@ function Login() {
     return emailRegex.test(email);
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // Email validation
-  if (!validateEmail(formData.email)) {
-    setErrorMessage('Please enter a valid email.');
-    return;
-  }
-
-  // Password validation
-  if (formData.password.length < 6) {
-    setErrorMessage('Password must be at least 6 characters.');
-    return;
-  }
-
-  setIsLoading(true);
-
-  try {
-    const response = await fetch('http://localhost:8080/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Response data:', data); // Debugging: Log the response data
-
-      // Check if 2FA is required
-      if (data.needs2FA) {
-        setSuccessMessage('Login successful! Please check your email for the 2FA code.');
-        setFormData({ email: '', password: '' });
-        setErrorMessage('');
-        
-        // Redirect to the 2FA page
-        navigate('/two-factor', { state: { email: formData.email } });
-      } else {
-        setSuccessMessage('Login successful!');
-        setFormData({ email: '', password: '' });
-        setErrorMessage('');
-        // Proceed with normal login if 2FA is not required
-      }
-    } else {
-      const data = await response.json();
-      console.log('Login failed data:', data); // Debugging: Log the failure data
-      setErrorMessage(data.message || 'Login failed. Please check your credentials.');
+    // Email validation
+    if (!validateEmail(formData.email)) {
+      setErrorMessage('Please enter a valid email.');
+      return;
     }
-  } catch (error) {
-    console.error('Error:', error);
-    setErrorMessage('An error occurred. Please try again later.');
-  } finally {
-    setIsLoading(false);
-  }
-};
 
+    // Password validation
+    if (formData.password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Response data:', data); // Debugging: Log the response data
+
+        // Check if 2FA is required
+        if (data.needs2FA) {
+          setSuccessMessage('Login successful! Please check your email for the 2FA code.');
+          setFormData({ email: '', password: '' });
+          setErrorMessage('');
+
+          // Redirect to the 2FA page
+          navigate('/two-factor', { state: { email: formData.email } });
+        } else {
+          // Successful login, check the user's role
+          const userRole = data.role; // Assuming the response includes the role
+          
+          setSuccessMessage('Login successful!');
+          setFormData({ email: '', password: '' });
+          setErrorMessage('');
+
+          // Redirect based on user role
+          if (userRole === 'Admin') {
+            navigate('/admin');  // Navigate to admin page
+          } else if (userRole === 'Employer') {
+            navigate('/employer-dashboard');  // Navigate to employer page
+          } else if (userRole === 'User') {
+            navigate('/user-dashboard');  // Navigate to user page
+          } else {
+            setErrorMessage('Unknown role. Please contact support.');
+          }
+        }
+      } else {
+        const data = await response.json();
+        console.log('Login failed data:', data); // Debugging: Log the failure data
+        setErrorMessage(data.message || 'Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage('An error occurred. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="login-container d-flex align-items-center justify-content-center vh-100">

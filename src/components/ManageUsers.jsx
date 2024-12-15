@@ -27,15 +27,24 @@ function ManageUsers() {
   };
 
   const handleDeleteUser = (id) => {
-    axios
-      .delete(`http://localhost:8080/api/users/${id}`)
-      .then(() => {
-        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-      })
-      .catch((error) => {
-        setError('Error deleting user. Please try again later.');
-        console.error('Error deleting user:', error);
-      });
+    // Confirm the delete action with a prompt (optional)
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      axios
+        .delete(`http://localhost:8080/api/users/${id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            // Success: Update the users list by filtering out the deleted user
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+          } else {
+            setError('Failed to delete user. Please try again.');
+            console.error('Failed to delete user:', response);
+          }
+        })
+        .catch((error) => {
+          setError('Error deleting user. Please try again later.');
+          console.error('Error deleting user:', error);
+        });
+    }
   };
 
   const handlePageChange = (newPage) => {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';  // Replaced useHistory with useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 
 function EditUser() {
   const { id } = useParams();
-  const navigate = useNavigate();  // Replacing useHistory with useNavigate
+  const navigate = useNavigate();
+  
   const [user, setUser] = useState({
     email: '',
     password: '',
@@ -12,15 +13,30 @@ function EditUser() {
     role: '',
   });
 
+  const [roles, setRoles] = useState([]);  // State to hold available roles
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/users/${id}`)
-      .then((response) => {
-        setUser(response.data);
+    // Fetch available roles from the backend
+    axios.get('http://localhost:8080/api/roles/all')
+      .then(response => {
+        setRoles(response.data);  // Set the roles data to state
       })
-      .catch((error) => {
-        console.error('Error fetching user:', error);
+      .catch(error => {
+        console.error('There was an error fetching the roles!', error);
       });
+  }, []);
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`http://localhost:8080/api/users/${id}`)
+        .then((response) => {
+          setUser(response.data);  // Set the user data from API
+        })
+        .catch((error) => {
+          console.error('Error fetching user:', error);
+        });
+    }
   }, [id]);
 
   const handleChange = (e) => {
@@ -31,13 +47,14 @@ function EditUser() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:8080/api/users/${id}`, user)
+      .put(`http://localhost:8080/api/users/update/${id}`, user)
       .then((response) => {
         alert('User updated successfully');
-        navigate('/admin/users');  // Using navigate to redirect after the update
+        navigate('/admin/user');
       })
       .catch((error) => {
         console.error('Error updating user:', error);
+        alert('Error updating user. Please try again.');
       });
   };
 
@@ -78,9 +95,9 @@ function EditUser() {
         <div>
           <label>Role</label>
           <select name="role" value={user.role} onChange={handleChange}>
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-            {/* Add other roles here */}
+            {roles.map((role) => (
+              <option key={role} value={role}>{role}</option>
+            ))}
           </select>
         </div>
         <button type="submit">Update User</button>

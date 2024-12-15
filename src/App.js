@@ -16,6 +16,8 @@ import RoleManagement from './components/RoleManagement';
 import ManageUsers from './components/ManageUsers';
 import CreateUser from './components/CreateUser';
 import EditUser from './components/EditUser';
+import JobseekerDashboard from './components/JobseekerDashboard';
+import EmployerDashboard from './components/EmployerDashboard';
 
 function App() {
   return (
@@ -37,6 +39,9 @@ function App() {
           <Route path="/admin/user" element={<ManageUsers />} />
           <Route path="/admin/user/create" element={<CreateUser />} /> {/* Corrected JSX syntax */}
           <Route path="/admin/user/edit/:id" element={<EditUser />} />  {/* Corrected JSX syntax */}
+          <Route path="/user-dashboard" element={<JobseekerDashboard/>}/>
+          <Route path="/employer-dashboard" element={<EmployerDashboard/>}/>
+
         </Routes>
         <Footer />
       </div>
