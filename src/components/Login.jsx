@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -11,7 +11,12 @@ const loginUser = async (email, password) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  if (!response.ok) throw new Error('Login failed');
+  
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Login failed');
+  }
+  
   return response.json();
 };
 
@@ -21,6 +26,13 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
+
+  // Memoize rolePaths to avoid unnecessary re-creation
+  const rolePaths = useMemo(() => ({
+    Admin: '/admin-dashboard',
+    Employer: '/employer-dashboard',
+    User: '/user-dashboard',
+  }), []);
 
   // Handle input change
   const handleChange = (e) => {
@@ -46,33 +58,40 @@ function Login() {
     }
 
     setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
 
     try {
       // Login user
       const data = await loginUser(formData.email, formData.password);
-      console.log('API Response:', data);
+      console.log('Login Response:', data);
 
       // Handle 2FA if needed
       if (data.needs2FA) {
+        // Store login context for post-2FA processing
+        localStorage.setItem('loginEmail', formData.email);
+        localStorage.setItem('loginRole', data.role);
+        localStorage.setItem('loginUserId', data.userId);
+
         setSuccessMessage('Login successful! Please check your email for the 2FA code.');
-        navigate('/two-factor', { state: { email: formData.email } });
+        navigate('/two-factor');
         return;
       }
 
-      // Redirect based on role
-      const redirectPath = data.redirect;
+      // If 2FA is not required (though this is unlikely in your current setup)
+      const redirectPath = rolePaths[data.role];
       if (redirectPath) {
-        // Store necessary data in local storage or state for later use
-        localStorage.setItem('authToken', data.token);
+        // Store authentication details
+        localStorage.setItem('authToken', data.token || 'dummy-token');
         localStorage.setItem('userRole', data.role);
+        localStorage.setItem('userId', data.userId);
 
-        console.log('Navigating to:', redirectPath);
         navigate(redirectPath);
       } else {
-        setErrorMessage('Redirection failed. Please contact support.');
+        setErrorMessage('Invalid user role. Please contact support.');
       }
     } catch (error) {
-      console.error('Error during login:', error.message);
+      console.error('Login error:', error);
       setErrorMessage(error.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -83,20 +102,15 @@ function Login() {
   useEffect(() => {
     const storedRole = localStorage.getItem('userRole');
     const storedToken = localStorage.getItem('authToken');
-    if (storedRole && storedToken) {
-      const rolePaths = {
-        Admin: '/admin',
-        User: '/user-dashboard',
-        Employer: '/employer-dashboard',
-      };
 
+    if (storedRole && storedToken) {
       const redirectPath = rolePaths[storedRole];
       if (redirectPath) {
-        console.log('Redirecting to stored role:', redirectPath);
+        console.log('Auto-redirecting to:', redirectPath);
         navigate(redirectPath);
       }
     }
-  }, [navigate]);
+  }, [navigate, rolePaths]);
 
   return (
     <div className="login-container d-flex align-items-center justify-content-center vh-100">

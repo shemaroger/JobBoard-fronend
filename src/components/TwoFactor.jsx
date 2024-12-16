@@ -1,28 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function TwoFactor() {
   const [token, setToken] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const { email } = location.state || {}; // Retrieve email from state
+  // Fetch stored user details
+  const email = localStorage.getItem('loginEmail');
+  const role = localStorage.getItem('loginRole');
+  const userId = localStorage.getItem('loginUserId');
 
+  // Role-based redirect paths
+  const rolePaths = {
+    Admin: '/admin',
+    Employer: '/employer-dashboard',
+    User: '/user-dashboard',
+  };
+
+  // Redirect to login if email is missing
   useEffect(() => {
     if (!email) {
-      // If no email is present, redirect back to login
       navigate('/login');
     }
-    document.getElementById('token').focus();
   }, [email, navigate]);
 
+  // Handle token input change
   const handleTokenChange = (e) => {
     setToken(e.target.value);
     setErrorMessage('');
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -32,40 +43,37 @@ function TwoFactor() {
     }
 
     setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
     try {
       const response = await fetch('http://localhost:8080/api/users/validate-2fa', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Important for handling cookies/sessions
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, token }),
       });
 
-      // Log the raw response for debugging
-      console.log('Raw Response:', response);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Invalid token');
+      }
 
-      const data = await response.text(); // Try to get text first
-      console.log('Response Data:', data);
+      const data = await response.json();
+      console.log('2FA Validation Response:', data);
 
-      if (response.ok) {
-        console.log('2FA validated successfully');
-        navigate('/admin');
+      // Store token and redirect based on role
+      localStorage.setItem('authToken', data.token || 'dummy-token');
+      const redirectPath = rolePaths[role];
+
+      if (redirectPath) {
+        setSuccessMessage('Two-factor authentication successful!');
+        setTimeout(() => navigate(redirectPath), 1500); // Redirect after 1.5 seconds
       } else {
-        // Try to parse as JSON if possible
-        let errorData;
-        try {
-          errorData = JSON.parse(data);
-        } catch (parseError) {
-          errorData = { message: data || 'Unknown error occurred' };
-        }
-        
-        setErrorMessage(errorData.message || 'Invalid or expired token.');
-        console.error('Validation Error:', errorData);
+        setErrorMessage('Invalid user role. Please contact support.');
       }
     } catch (error) {
-      console.error('Network or Request Error:', error);
-      setErrorMessage(`Network error: ${error.message}`);
+      console.error('2FA Validation Error:', error);
+      setErrorMessage(error.message || 'Failed to validate token. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -73,38 +81,41 @@ function TwoFactor() {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center">Enter 2FA Token</h2>
-      {errorMessage && (
-        <div className="alert alert-danger">
-          <i className="fa fa-exclamation-circle me-2"></i>
-          {errorMessage}
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="token" className="form-label">2FA Token</label>
-          <input
-            type="text"
-            id="token"
-            name="token"
-            className="form-control"
-            value={token}
-            onChange={handleTokenChange}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="btn btn-primary w-100"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <><i className="fa fa-spinner fa-spin me-2"></i>Validating...</>
-          ) : (
-            'Submit'
-          )}
-        </button>
-      </form>
+      <div className="card p-4 shadow-sm mx-auto" style={{ maxWidth: '400px' }}>
+        <h2 className="text-center mb-4">Two-Factor Authentication</h2>
+        {errorMessage && (
+          <div className="alert alert-danger">
+            <i className="fa fa-exclamation-circle me-2"></i>
+            {errorMessage}
+          </div>
+        )}
+        {successMessage && (
+          <div className="alert alert-success">
+            <i className="fa fa-check-circle me-2"></i>
+            {successMessage}
+          </div>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="token" className="form-label">Enter 2FA Token</label>
+            <input
+              type="text"
+              id="token"
+              className="form-control"
+              value={token}
+              onChange={handleTokenChange}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100" disabled={isLoading}>
+            {isLoading ? (
+              <><i className="fa fa-spinner fa-spin me-2"></i>Validating...</>
+            ) : (
+              'Submit'
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
