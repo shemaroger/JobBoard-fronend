@@ -14,33 +14,72 @@ import {
   LogOut,
 } from 'react-feather';
 
+const Sidebar = ({ isCollapsed, toggleSidebar, menuItems }) => {
+  const location = useLocation();
+
+  return (
+    <nav className={`sidebar bg-dark ${isCollapsed ? 'collapsed' : ''} position-fixed vh-100`}>
+      <div className="d-flex flex-column align-items-center pt-3">
+        <button
+          className="btn btn-light btn-sm toggle-sidebar mb-3"
+          onClick={toggleSidebar}
+        >
+          {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
+        </button>
+        <h2 className="text-white text-center mb-4">Admin</h2>
+        <ul className="nav flex-column w-100">
+          {menuItems.map((item) => (
+            <li key={item.path} className="nav-item">
+              <Link
+                to={item.path}
+                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+              >
+                {item.icon}
+                {!isCollapsed && item.label}
+              </Link>
+            </li>
+          ))}
+          <li className="nav-item mt-auto">
+            <Link to="/logout" className="nav-link text-danger">
+              <LogOut className="me-2" />
+              {!isCollapsed && 'Logout'}
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
+};
+
 const CreateUser = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [role, setRole] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    role: '',
+  });
   const [roles, setRoles] = useState([]);
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validated, setValidated] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     axios
       .get('http://localhost:8080/api/roles/all')
-      .then((response) => {
-        setRoles(response.data);
-      })
-      .catch(() => {
-        setMessage('Unable to fetch roles. Please try again later.');
-      });
+      .then((response) => setRoles(response.data))
+      .catch(() => setMessage('Unable to fetch roles. Please try again later.'));
   }, []);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-
-    if (form.checkValidity() === false) {
-      e.stopPropagation();
+    if (!form.checkValidity()) {
       setValidated(true);
       return;
     }
@@ -48,27 +87,14 @@ const CreateUser = () => {
     setIsSubmitting(true);
     setMessage('');
 
-    const userData = {
-      email,
-      password,
-      name,
-      role: {
-        id: role,
-      },
-    };
-
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/users/add',
-        userData
-      );
-      setMessage(`User created successfully: ${response.data.email}`);
+      const response = await axios.post('http://localhost:8080/api/users/add', {
+        ...formData,
+        role: { id: formData.role },
+      });
 
-      // Reset form
-      setEmail('');
-      setPassword('');
-      setName('');
-      setRole('');
+      setMessage(`User created successfully: ${response.data.email}`);
+      setFormData({ email: '', password: '', name: '', role: '' });
       setValidated(false);
     } catch {
       setMessage('Error creating user. Please check your details and try again.');
@@ -77,87 +103,25 @@ const CreateUser = () => {
     }
   };
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const location = useLocation();
-
   const toggleSidebar = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
   const menuItems = [
-    {
-      path: '/admin/dashboard',
-      label: 'Dashboard',
-      icon: <Home className="me-2" />,
-    },
-    {
-      path: '/admin/user',
-      label: 'Manage Users',
-      icon: <Users className="me-2" />,
-    },
-    {
-      path: '/admin/jobs',
-      label: 'Manage Job Listings',
-      icon: <Briefcase className="me-2" />,
-    },
-    {
-      path: '/admin/roles',
-      label: 'Manage Roles',
-      icon: <Shield className="me-2" />,
-    },
-    {
-      path: '/admin/reports',
-      label: 'Reports',
-      icon: <BarChart className="me-2" />,
-    },
-    {
-      path: '/admin/settings',
-      label: 'Settings',
-      icon: <Settings className="me-2" />,
-    },
+    { path: '/admin/dashboard', label: 'Dashboard', icon: <Home className="me-2" /> },
+    { path: '/admin/user', label: 'Manage Users', icon: <Users className="me-2" /> },
+    { path: '/admin/jobs', label: 'Manage Job Listings', icon: <Briefcase className="me-2" /> },
+    { path: '/admin/roles', label: 'Manage Roles', icon: <Shield className="me-2" /> },
+    { path: '/admin/reports', label: 'Reports', icon: <BarChart className="me-2" /> },
+    { path: '/admin/settings', label: 'Settings', icon: <Settings className="me-2" /> },
   ];
 
   return (
     <div className="admin-dashboard d-flex">
-      {/* Sidebar */}
-      <nav
-        className={`sidebar bg-dark ${
-          isSidebarCollapsed ? 'collapsed' : ''
-        } position-fixed vh-100`}
-      >
-        <div className="d-flex flex-column align-items-center pt-3">
-          <button
-            className="btn btn-light btn-sm toggle-sidebar mb-3"
-            onClick={toggleSidebar}
-          >
-            {isSidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
-          </button>
-          <h2 className="text-white text-center mb-4">
-            <span className="logo">Admin</span>
-          </h2>
-          <ul className="nav flex-column w-100">
-            {menuItems.map((item) => (
-              <li key={item.path} className="nav-item">
-                <Link
-                  to={item.path}
-                  className={`nav-link ${
-                    location.pathname === item.path ? 'active' : ''
-                  }`}
-                >
-                  {item.icon}
-                  {!isSidebarCollapsed && item.label}
-                </Link>
-              </li>
-            ))}
-            <li className="nav-item mt-auto">
-              <Link to="/logout" className="nav-link text-danger">
-                <LogOut className="me-2" />
-                {!isSidebarCollapsed && 'Logout'}
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <Sidebar
+        isCollapsed={isSidebarCollapsed}
+        toggleSidebar={toggleSidebar}
+        menuItems={menuItems}
+      />
 
-      {/* Main Content */}
       <div className="content flex-grow-1 p-4">
         <div className="container py-5">
           <div className="row justify-content-center">
@@ -176,8 +140,8 @@ const CreateUser = () => {
                         type="email"
                         className="form-control"
                         id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={formData.email}
+                        onChange={handleChange}
                         required
                         placeholder="you@example.com"
                       />
@@ -194,8 +158,8 @@ const CreateUser = () => {
                         type="password"
                         className="form-control"
                         id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={formData.password}
+                        onChange={handleChange}
                         required
                         minLength={6}
                         placeholder="••••••••"
@@ -213,8 +177,8 @@ const CreateUser = () => {
                         type="text"
                         className="form-control"
                         id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={formData.name}
+                        onChange={handleChange}
                         required
                         placeholder="John Doe"
                       />
@@ -230,8 +194,8 @@ const CreateUser = () => {
                       <select
                         className="form-select"
                         id="role"
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
+                        value={formData.role}
+                        onChange={handleChange}
                         required
                       >
                         <option value="">Select Role</option>
@@ -241,9 +205,7 @@ const CreateUser = () => {
                           </option>
                         ))}
                       </select>
-                      <div className="invalid-feedback">
-                        Please select a role.
-                      </div>
+                      <div className="invalid-feedback">Please select a role.</div>
                     </div>
 
                     <div className="d-grid">
