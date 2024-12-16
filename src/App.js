@@ -18,12 +18,16 @@ import CreateUser from './components/CreateUser';
 import EditUser from './components/EditUser';
 import JobseekerDashboard from './components/JobseekerDashboard';
 import EmployerDashboard from './components/EmployerDashboard';
+import JobCategoryForm from './components/JobCategoryForm';
+import JobCategoryList from './components/JobCategoryList';
 
 function App() {
   return (
     <Router>
       <div className="App">
+        {/* The Header component is now inside the Router context */}
         <Header />
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
@@ -37,12 +41,15 @@ function App() {
           <Route path="/two-factor" element={<TwoFactor />} />
           <Route path="/admin/roles" element={<RoleManagement />} />
           <Route path="/admin/user" element={<ManageUsers />} />
-          <Route path="/admin/user/create" element={<CreateUser />} /> {/* Corrected JSX syntax */}
-          <Route path="/admin/user/edit/:id" element={<EditUser />} />  {/* Corrected JSX syntax */}
-          <Route path="/user-dashboard" element={<JobseekerDashboard/>}/>
-          <Route path="/employer-dashboard" element={<EmployerDashboard/>}/>
-
+          <Route path="/admin/user/create" element={<CreateUser />} />
+          <Route path="/admin/user/edit/:id" element={<EditUser />} />
+          <Route path="/user-dashboard" element={<JobseekerDashboard />} />
+          <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+          <Route path="/admin/job-category-form" element={<JobCategoryForm />} />
+          <Route path="/admin/job-category" element={<JobCategoryList />} />
         </Routes>
+        
+        {/* The Footer is inside the Router context */}
         <Footer />
       </div>
     </Router>

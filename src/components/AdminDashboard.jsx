@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Tag, // Import the Tag icon for Job Category
 } from 'lucide-react';
 
 function AdminDashboard() {
@@ -39,6 +40,11 @@ function AdminDashboard() {
       icon: <Briefcase className="me-2" />,
     },
     {
+      path: '/admin/job-category', // Added new path for Job Category
+      label: 'Job Category',
+      icon: <Tag className="me-2" />, // Icon for Job Category
+    },
+    {
       path: '/admin/roles',
       label: 'Manage Roles',
       icon: <Shield className="me-2" />,
@@ -59,9 +65,7 @@ function AdminDashboard() {
     <div className="admin-dashboard">
       {/* Sidebar */}
       <nav
-        className={`sidebar bg-dark ${
-          isSidebarCollapsed ? 'collapsed' : ''
-        } position-fixed vh-100`}
+        className={`sidebar bg-dark ${isSidebarCollapsed ? 'collapsed' : ''} position-fixed vh-100`}
       >
         <div className="d-flex flex-column align-items-center pt-3">
           <button
@@ -78,9 +82,7 @@ function AdminDashboard() {
               <li key={item.path} className="nav-item">
                 <Link
                   to={item.path}
-                  className={`nav-link ${
-                    location.pathname === item.path ? 'active' : ''
-                  }`}
+                  className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
                 >
                   {item.icon}
                   {!isSidebarCollapsed && item.label}
@@ -99,9 +101,7 @@ function AdminDashboard() {
 
       {/* Main Content */}
       <main
-        className={`main-content ${
-          isSidebarCollapsed ? 'expanded' : ''
-        } col-md-9 ms-sm-auto col-lg-10 px-md-4`}
+        className={`main-content ${isSidebarCollapsed ? 'expanded' : ''} col-md-9 ms-sm-auto col-lg-10 px-md-4`}
       >
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 className="h2">Dashboard Overview</h1>
@@ -116,22 +116,9 @@ function AdminDashboard() {
 
         {/* Dashboard Quick Stats */}
         <div className="row g-4">
-          {[
-            {
-              icon: <Users size={48} className="text-primary mb-3" />,
-              title: 'Total Users',
-              value: '1,234',
-            },
-            {
-              icon: <Briefcase size={48} className="text-success mb-3" />,
-              title: 'Active Job Listings',
-              value: '56',
-            },
-            {
-              icon: <BarChart size={48} className="text-warning mb-3" />,
-              title: 'Total Reports',
-              value: '42',
-            },
+          {[{ icon: <Users size={48} className="text-primary mb-3" />, title: 'Total Users', value: '1,234' },
+            { icon: <Briefcase size={48} className="text-success mb-3" />, title: 'Active Job Listings', value: '56' },
+            { icon: <BarChart size={48} className="text-warning mb-3" />, title: 'Total Reports', value: '42' },
           ].map((stat, index) => (
             <div className="col-md-4" key={index}>
               <div className="card text-center shadow-sm">
@@ -167,8 +154,7 @@ function AdminDashboard() {
             <div className="card shadow-sm">
               <div className="card-header">Job Listings by Department</div>
               <div className="card-body">
-                {[
-                  { name: 'Tech', count: 44, color: 'primary' },
+                {[{ name: 'Tech', count: 44, color: 'primary' },
                   { name: 'Finance', count: 32, color: 'success' },
                   { name: 'Marketing', count: 22, color: 'info' },
                   { name: 'Sales', count: 15, color: 'warning' },
@@ -178,9 +164,7 @@ function AdminDashboard() {
                     key={index}
                   >
                     <span>{dept.name}</span>
-                    <span className={`badge bg-${dept.color}`}>
-                      {dept.count}
-                    </span>
+                    <span className={`badge bg-${dept.color}`}>{dept.count}</span>
                   </div>
                 ))}
               </div>
