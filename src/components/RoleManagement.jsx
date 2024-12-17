@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { Edit2, Trash2 } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
 
 function RoleManagement() {
@@ -21,7 +22,7 @@ function RoleManagement() {
 
   useEffect(() => {
     fetchRoles();
-  }, [fetchRoles]);
+  }, []);
 
   const handleAddRole = async () => {
     try {
@@ -134,13 +135,13 @@ function RoleManagement() {
                         className="btn btn-success me-2"
                         onClick={() => handleEditRole(role.id)}
                       >
-                        Save
+                        <i className="bi bi-check-circle"></i> Save
                       </button>
                       <button
                         className="btn btn-danger"
                         onClick={() => setEditRoleId(null)}
                       >
-                        Cancel
+                        <i className="bi bi-x-circle"></i> Cancel
                       </button>
                     </div>
                   </>
@@ -155,13 +156,13 @@ function RoleManagement() {
                           setEditRoleName(role.name);
                         }}
                       >
-                        Edit
+                        <Edit2 size={16} />
                       </button>
                       <button
                         className="btn btn-danger"
                         onClick={() => handleDeleteRole(role.id)}
                       >
-                        Delete
+                        <Trash2 size={16} /> 
                       </button>
                     </div>
                   </>
