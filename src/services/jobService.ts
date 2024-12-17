@@ -1,30 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
 const API_URL = "http://localhost:8080/api/jobs"; // Replace with your backend URL
 
-export const jobService = {
-  getAllJobs: async () => {
-    const response = await axios.get(`${API_URL}/all`);
-    return response.data;
-  },
-
-  getJobById: async (id: number) => {
-    const response = await axios.get(`${API_URL}/${id}`);
-    return response.data;
-  },
-
-  createJob: async (job: any) => {
-    const response = await axios.post(`${API_URL}/add`, job);
-    return response.data;
-  },
-
-  updateJob: async (id: number, job: any) => {
-    const response = await axios.put(`${API_URL}/update/${id}`, job);
-    return response.data;
-  },
-
-  deleteJob: async (id: number) => {
-    const response = await axios.delete(`${API_URL}/delete/${id}`);
-    return response.data;
-  },
+const JobService = {
+  getAllJobs: () => axios.get(`${API_URL}/all`),
+  getJobById: (id) => axios.get(`${API_URL}/${id}`),
+  createJob: (job) => axios.post(`${API_URL}/add`, job),
+  updateJob: (id, jobDetails) => axios.put(`${API_URL}/update/${id}`, jobDetails),
+  deleteJob: (id) => axios.delete(`${API_URL}/delete/${id}`),
+  getJobsByCategory: (categoryId) => axios.get(`${API_URL}/category/${categoryId}`),
+  getJobsByEmployer: (employerId) => axios.get(`${API_URL}/employer/${employerId}`),
+  getJobsByLocation: (location) => axios.get(`${API_URL}/location`, { params: { location } }),
+  searchJobs: (keyword) => axios.get(`${API_URL}/search`, { params: { keyword } }),
 };
+
+export default JobService;
