@@ -20,6 +20,13 @@ import JobseekerDashboard from './components/JobseekerDashboard';
 import EmployerDashboard from './components/EmployerDashboard';
 import JobCategoryForm from './components/JobCategoryForm';
 import JobCategoryManagement from './components/JobCategoryManagement';
+import JobManagement from './components/JobManagement';
+import JobDetails from './components/JobDetails';
+import JobList from './components/JobList';
+import SearchJobs from './components/SearchJobs';
+import EditJob from './components/EditJob';
+ 
+
 
 function App() {
   return (
@@ -47,6 +54,11 @@ function App() {
           <Route path="/employer-dashboard" element={<EmployerDashboard />} />
           <Route path="/admin/job-category-form" element={<JobCategoryForm />} />
           <Route path="/admin/job-category" element={<JobCategoryManagement />} />
+          <Route path="/job/add" element={<JobManagement />} />
+          <Route path="/jobs/:id" element={<JobDetails />} />
+          <Route path="/add-list" element={<JobList />} />
+          <Route path="/search" element={<SearchJobs />} />
+          <Route path="/edit-job/:id" element={<EditJob/>}/>
         </Routes>
         
         {/* The Footer is inside the Router context */}

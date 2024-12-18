@@ -19,12 +19,12 @@ function EmployerDashboard() {
         <nav>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
             <li>
-              <Link to="/post-job" style={linkStyle}>
+              <Link to="/add-list" style={linkStyle}>
                 Post a Job
               </Link>
             </li>
             <li>
-              <Link to="/manage-jobs" style={linkStyle}>
+              <Link to="/job/add" style={linkStyle}>
                 Manage Job Posts
               </Link>
             </li>
@@ -52,7 +52,7 @@ function EmployerDashboard() {
           <div style={cardStyle}>
             <h3>Active Job Posts</h3>
             <p>10 job postings are live</p>
-            <Link to="/manage-jobs" style={{ textDecoration: 'none', color: '#007bff' }}>
+            <Link to="/job/lists" style={{ textDecoration: 'none', color: '#007bff' }}>
               Manage Jobs →
             </Link>
           </div>

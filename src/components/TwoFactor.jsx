@@ -11,7 +11,7 @@ function TwoFactor() {
   // Fetch stored user details
   const email = localStorage.getItem('loginEmail');
   const role = localStorage.getItem('loginRole');
-  const userId = localStorage.getItem('loginUserId');
+  const userId = localStorage.getItem('loginUserId'); // Retrieve userId
 
   // Role-based redirect paths
   const rolePaths = {
@@ -71,6 +71,10 @@ function TwoFactor() {
       } else {
         setErrorMessage('Invalid user role. Please contact support.');
       }
+
+      // Here you can use the userId after successful 2FA verification
+      console.log('User ID after successful 2FA:', userId);
+
     } catch (error) {
       console.error('2FA Validation Error:', error);
       setErrorMessage(error.message || 'Failed to validate token. Please try again.');
@@ -97,7 +101,7 @@ function TwoFactor() {
         )}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="token" className="form-label">Enter 2FA Token</label>
+            <label htmlFor="token" className="form-label">Enter the 2FA Token</label>
             <input
               type="text"
               id="token"
@@ -107,11 +111,15 @@ function TwoFactor() {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100" disabled={isLoading}>
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            disabled={isLoading}
+          >
             {isLoading ? (
-              <><i className="fa fa-spinner fa-spin me-2"></i>Validating...</>
+              <><i className="fa fa-spinner fa-spin me-2"></i>Verifying...</>
             ) : (
-              'Submit'
+              'Verify Token'
             )}
           </button>
         </form>
