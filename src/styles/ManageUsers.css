@@ -1,111 +1,97 @@
-/* Overall container styling */
-.container {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #343a40;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header styling */
-.header {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+.sidebar h4 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
 }
 
-/* Button styling */
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
+.sidebar .nav {
+  flex-grow: 1;
+  padding-left: 0;
 }
 
-.btn-primary {
-    background-color: #007bff;
-    color: white;
+.sidebar .nav-item {
+  margin-bottom: 1rem;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
-.btn-edit {
-    background-color: #28a745;
-    color: white;
-    margin-right: 10px;
+.sidebar .nav-link:hover {
+  background-color: #007bff;
 }
 
-.btn-edit:hover {
-    background-color: #218838;
+.sidebar .nav-link.active {
+  background-color: #007bff;
 }
 
-.btn-delete {
-    background-color: #dc3545;
-    color: white;
-    border: none;
+.sidebar .nav-link span {
+  margin-left: 10px;
 }
 
-.btn-delete:hover {
-    background-color: #c82333;
+.sidebar .logout {
+  margin-top: auto;
+  margin-bottom: 10px;
 }
 
-.btn-pagination {
-    padding: 8px 16px;
-    border-radius: 4px;
-    margin: 0 5px;
-    font-size: 14px;
-    background-color: #f1f1f1;
-    color: #333;
-    border: 1px solid #ddd;
+.sidebar .logout .nav-link {
+  color: #dc3545;
+  font-size: 1rem;
 }
 
-.btn-pagination:hover {
-    background-color: #e2e2e2;
+.sidebar .logout .nav-link:hover {
+  background-color: transparent;
 }
 
-/* Table styling */
-.table {
+/* Main content area */
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px);
+  background-color: #f8f9fa;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+    position: relative;
+    height: auto;
+  }
 
-.table th,
-.table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Loading spinner */
-.loading {
-    text-align: center;
-    font-size: 18px;
-    color: #007bff;
-    margin-top: 20px;
-}
-
-/* Pagination controls */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.pagination span {
-    margin: 0 15px;
-    font-size: 16px;
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
 }

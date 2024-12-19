@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap is included
 
@@ -25,8 +25,8 @@ function JobDetails() {
 
   if (error) {
     return (
-      <div className="container my-4">
-        <div className="alert alert-danger" role="alert">
+      <div className="container my-5">
+        <div className="alert alert-danger text-center" role="alert">
           {error}
         </div>
       </div>
@@ -35,30 +35,46 @@ function JobDetails() {
 
   if (!jobDetails) {
     return (
-      <div className="container my-4">
+      <div className="container my-5 d-flex justify-content-center">
         <div className="spinner-border text-primary" role="status">
           <span className="sr-only">Loading...</span>
         </div>
-        <p>Loading job details...</p>
       </div>
     );
   }
 
   return (
-    <div className="container my-4">
-      <div className="card shadow-lg">
-        <div className="card-header bg-primary text-white">
-          <h3>{jobDetails.title}</h3>
-        </div>
-        <div className="card-body">
-          <p className="card-text"><strong>Description:</strong> {jobDetails.description}</p>
-          <p className="card-text"><strong>Location:</strong> {jobDetails.location}</p>
-          <p className="card-text"><strong>Salary:</strong> {jobDetails.salaryRange || 'Salary not disclosed'}</p>
-          <p className="card-text"><strong>Employment Type:</strong> {jobDetails.employmentType}</p>
-          
-          <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>
-            Back
-          </button>
+    <div className="container my-5">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-8">
+          <div className="card shadow-lg border-light rounded">
+            <div className="card-header bg-primary text-white text-center py-5">
+              <h2 className="display-4 font-weight-bold">{jobDetails.title}</h2>
+              <p className="lead text-white-50">{jobDetails.location} | {jobDetails.salaryRange || 'Salary not disclosed'} | {jobDetails.employmentType}</p>
+            </div>
+            <div className="card-body">
+              <div className="mb-4">
+                <p className="font-weight-bold text-muted"><i className="bi bi-geo-alt-fill"></i> <span className="text-dark">{jobDetails.location}</span></p>
+                <p className="font-weight-bold text-muted"><i className="bi bi-currency-dollar"></i> <span className="text-dark">{jobDetails.salaryRange || 'Salary not disclosed'}</span></p>
+                <p className="font-weight-bold text-muted"><i className="bi bi-clock-fill"></i> <span className="text-dark">{jobDetails.employmentType}</span></p>
+              </div>
+
+              <div className="mb-5">
+                <h4 className="font-weight-bold">Job Description</h4>
+                <p>{jobDetails.description}</p>
+              </div>
+
+              <div className="d-flex justify-content-between align-items-center mt-4">
+                <button 
+                  className="btn btn-outline-primary btn-lg shadow-sm"
+                  onClick={() => navigate(-1)}
+                >
+                  <i className="bi bi-arrow-left-circle-fill"></i> Back
+                </button>
+                
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

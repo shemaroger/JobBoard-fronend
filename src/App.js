@@ -7,9 +7,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ForgetPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
-import RoleList from "./components/roles/RoleList";
-import AddRole from "./components/roles/AddRole";
-import RoleDetail from "./components/roles/RoleDetail";
+
 import AdminDashboard from "./components/AdminDashboard";
 import TwoFactor from './components/TwoFactor';
 import RoleManagement from './components/RoleManagement';
@@ -25,24 +23,20 @@ import JobList from './components/JobList';
 import SearchJobs from './components/SearchJobs';
 import EditJob from './components/EditJob';
 import JobDetails from './components/JobDetails';
- 
-
+import CreateApplication from './components/CreateApplication';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        {/* The Header component is now inside the Router context */}
+        {/* The Header component is inside the Router context */}
         <Header />
-        
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/roles" element={<RoleList />} />
-          <Route path="/roles/add" element={<AddRole />} />
-          <Route path="/roles/:id" element={<RoleDetail />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/two-factor" element={<TwoFactor />} />
@@ -57,10 +51,11 @@ function App() {
           <Route path="/job/add" element={<JobManagement />} />
           <Route path="/add-list" element={<JobList />} />
           <Route path="/search" element={<SearchJobs />} />
-          <Route path="/edit-job/:id" element={<EditJob/>}/>
-          <Route path="/job-details/:id" element={<JobDetails/>} />
+          <Route path="/edit-job/:id" element={<EditJob />} />
+          <Route path="/job-details/:id" element={<JobDetails />} />
+          <Route path="/apply/:id" element={<CreateApplication />} />
         </Routes>
-        
+
         {/* The Footer is inside the Router context */}
         <Footer />
       </div>

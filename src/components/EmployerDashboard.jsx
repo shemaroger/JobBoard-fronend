@@ -1,41 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaPlus, FaClipboardList, FaChartLine, FaUsers } from 'react-icons/fa';
 
 function EmployerDashboard() {
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <div className="d-flex" style={{ height: '100vh' }}>
       {/* Sidebar */}
-      <div
-        style={{
-          width: '250px',
-          background: '#343a40',
-          color: '#fff',
-          padding: '20px',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <h2>Employer Dashboard</h2>
+      <div className="bg-dark text-white p-4" style={{ width: '250px' }}>
+        <h2 className="mb-4">Employer Dashboard</h2>
         <nav>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            <li>
-              <Link to="/add-list" style={linkStyle}>
-                Post a Job
+          <ul className="list-unstyled">
+            <li className="mb-3">
+              <Link to="/add-list" className="text-white d-flex align-items-center">
+                <FaPlus className="mr-2" /> Post a Job
               </Link>
             </li>
-            <li>
-              <Link to="/job/add" style={linkStyle}>
-                Manage Job Posts
+            <li className="mb-3">
+              <Link to="/job/add" className="text-white d-flex align-items-center">
+                <FaClipboardList className="mr-2" /> Manage Job Posts
               </Link>
             </li>
-            <li>
-              <Link to="/view-applications" style={linkStyle}>
-                View Applications
+            <li className="mb-3">
+              <Link to="/view-applications" className="text-white d-flex align-items-center">
+                <FaUsers className="mr-2" /> View Applications
               </Link>
             </li>
-            <li>
-              <Link to="/analytics" style={linkStyle}>
-                Job Analytics
+            <li className="mb-3">
+              <Link to="/analytics" className="text-white d-flex align-items-center">
+                <FaChartLine className="mr-2" /> Job Analytics
               </Link>
             </li>
           </ul>
@@ -43,60 +35,49 @@ function EmployerDashboard() {
       </div>
 
       {/* Main Content */}
-      <div style={{ flex: 1, background: '#f8f9fa', padding: '20px' }}>
+      <div className="flex-fill bg-light p-4">
         <h1>Welcome, [Employer Name]</h1>
         <p>Here’s an overview of your activity:</p>
 
-        <div style={dashboardGrid}>
+        <div className="row row-cols-1 row-cols-md-3 g-4 mt-4">
           {/* Summary Cards */}
-          <div style={cardStyle}>
-            <h3>Active Job Posts</h3>
-            <p>10 job postings are live</p>
-            <Link to="/job/lists" style={{ textDecoration: 'none', color: '#007bff' }}>
-              Manage Jobs →
-            </Link>
+          <div className="col">
+            <div className="card shadow-sm h-100">
+              <div className="card-body text-center">
+                <h5 className="card-title">Active Job Posts</h5>
+                <p className="card-text">10 job postings are live</p>
+                <Link to="/job/lists" className="btn btn-primary">
+                  Manage Jobs →
+                </Link>
+              </div>
+            </div>
           </div>
-          <div style={cardStyle}>
-            <h3>Applications Received</h3>
-            <p>45 applications pending review</p>
-            <Link to="/view-applications" style={{ textDecoration: 'none', color: '#007bff' }}>
-              View Applications →
-            </Link>
+          <div className="col">
+            <div className="card shadow-sm h-100">
+              <div className="card-body text-center">
+                <h5 className="card-title">Applications Received</h5>
+                <p className="card-text">45 applications pending review</p>
+                <Link to="/view-applications" className="btn btn-primary">
+                  View Applications →
+                </Link>
+              </div>
+            </div>
           </div>
-          <div style={cardStyle}>
-            <h3>Job Analytics</h3>
-            <p>Track performance of job postings</p>
-            <Link to="/analytics" style={{ textDecoration: 'none', color: '#007bff' }}>
-              View Analytics →
-            </Link>
+          <div className="col">
+            <div className="card shadow-sm h-100">
+              <div className="card-body text-center">
+                <h5 className="card-title">Job Analytics</h5>
+                <p className="card-text">Track performance of job postings</p>
+                <Link to="/analytics" className="btn btn-primary">
+                  View Analytics →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-const linkStyle = {
-  color: '#fff',
-  textDecoration: 'none',
-  display: 'block',
-  padding: '10px 0',
-};
-
-const dashboardGrid = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-  gap: '20px',
-  marginTop: '20px',
-};
-
-const cardStyle = {
-  background: '#fff',
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  padding: '20px',
-  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  textAlign: 'center',
-};
 
 export default EmployerDashboard;

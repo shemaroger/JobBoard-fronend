@@ -1,0 +1,64 @@
+/* Card Styling */
+.card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Header Styling */
+.card-header {
+    background-color: #0056b3;
+    padding: 40px 20px;
+    color: white;
+}
+
+.card-header h2 {
+    font-weight: 700;
+}
+
+.card-header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Body Styling */
+.card-body {
+    padding: 30px;
+}
+
+/* Icon Styling */
+.card-body i {
+    color: #007bff;
+    margin-right: 8px;
+}
+
+/* Button Styling */
+.btn-lg {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 25px;
+}
+
+.btn-outline-primary {
+    border: 2px solid #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}

@@ -1,100 +1,45 @@
-/* Hero section */
-.home .hero-section {
-  text-align: center;
-  background-color: #f8f9fa;
-  padding: 40px;
-  margin-bottom: 40px;
-}
-
-.home .hero-section h1 {
-  font-size: 2.5rem;
-  color: #333;
-}
-
-.home .hero-section p {
-  font-size: 1.2rem;
-  color: #666;
-}
-
-.home .explore-button {
-  padding: 10px 20px;
-  background-color: #007bff;
+.hero-section {
+  background: linear-gradient(135deg, #3498db, #2ecc71);
   color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
+  padding: 50px 0;
 }
 
-.home .explore-button:hover {
-  background-color: #0056b3;
-}
-
-/* Job card container */
-.home .job-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-/* Job card styles */
 .job-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  width: 300px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .job-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.job-card h3.job-title {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 10px;
+.job-card img {
+  height: 200px;
+  object-fit: cover;
 }
 
-.job-card p {
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-text {
   font-size: 1rem;
-  color: #555;
-  margin: 5px 0;
 }
 
-.job-card .job-location,
-.job-card .job-type,
-.job-card .job-category {
-  font-style: italic;
+.card-body {
+  padding: 20px;
 }
 
-.job-card .view-details-button,
-.job-card .apply-now-button {
-  padding: 10px 15px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
-  margin-bottom: 10px;
+.d-flex a {
+  width: 45%;
 }
 
-.job-card .view-details-button:hover,
-.job-card .apply-now-button:hover {
-  background-color: #218838;
+.btn-outline-primary {
+  border-radius: 50px;
 }
 
-.job-card .apply-now-button {
-  background-color: #007bff;
-}
-
-.job-card .apply-now-button:hover {
-  background-color: #0056b3;
+.btn-success {
+  border-radius: 50px;
 }
