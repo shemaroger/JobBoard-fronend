@@ -30,7 +30,7 @@ const ManageUsers = () => {
   const menuItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: <Home className="me-2" /> },
     { path: '/admin/user', label: 'Manage Users', icon: <Users className="me-2" /> },
-    { path: '/admin/jobs', label: 'Manage Job Listings', icon: <Briefcase className="me-2" /> },
+    
     { path: '/admin/job-category', label: 'Job Category', icon: <Tag className="me-2" /> },
     { path: '/admin/roles', label: 'Manage Roles', icon: <Shield className="me-2" /> },
     { path: '/admin/reports', label: 'Reports', icon: <BarChart className="me-2" /> },
@@ -84,7 +84,7 @@ const ManageUsers = () => {
   return (
     <div className="d-flex vh-100">
       {/* Sidebar */}
-      <nav className="bg-dark text-white p-20 flex-shrink-0" style={{ width: "320px", position: "fixed", height: "100%", top: "0" }}>
+      <nav className="bg-dark text-white p-3 flex-shrink-0" style={{ width: "320px", position: "fixed", height: "100%", top: "0" }}>
         <h4 className="mb-4">Admin Panel</h4>
         <ul className="nav flex-column">
           {menuItems.map((item) => (

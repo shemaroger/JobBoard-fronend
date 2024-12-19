@@ -24,7 +24,7 @@ const CreateUser = () => {
   const menuItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: <Home className="me-2" /> },
     { path: '/admin/user', label: 'Manage Users', icon: <Users className="me-2" /> },
-    { path: '/add-list', label: 'Manage Job Listings', icon: <Briefcase className="me-2" /> },
+  
     { path: '/admin/job-category', label: 'Job Category', icon: <Tag className="me-2" /> },
     { path: '/admin/roles', label: 'Manage Roles', icon: <Shield className="me-2" /> },
     { path: '/admin/reports', label: 'Reports', icon: <BarChart className="me-2" /> },
