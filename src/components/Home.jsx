@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import { FaSearch, FaMapMarkerAlt, FaBriefcase, FaDollarSign } from 'react-icons/fa'; // Import React Icons
 import '../styles/Home.css';
 
 function Home() {
@@ -35,14 +36,21 @@ function Home() {
         <h1 className="display-3 text-light">Find Your Dream Job</h1>
         <p className="lead text-light mb-4">Start your journey with exciting job opportunities tailored to your expertise.</p>
         
-        {/* Search Bar */}
-        <input
-          type="text"
-          className="form-control mb-4"
-          placeholder="Search jobs by title, location, or type"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        {/* Search Bar with Icon */}
+        <div className="input-group mb-4">
+          <div className="input-group-prepend">
+            <span className="input-group-text">
+              <FaSearch /> {/* Search Icon */}
+            </span>
+          </div>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search jobs by title, location, or type"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
 
         <Link to="/jobs" className="btn btn-lg btn-gradient">Explore Jobs</Link>
       </div>
@@ -70,9 +78,24 @@ function JobCard({ job }) {
     <div className="job-card card shadow-lg rounded-lg">
       <div className="card-body">
         <h5 className="card-title text-primary">{job.title}</h5>
-        <p className="card-text text-muted">{job.location}</p>
-        <p className="card-text">{job.employmentType}</p>
-        <p className="card-text font-weight-bold">{job.salaryRange || 'Salary not disclosed'}</p>
+        
+        {/* Job Location Icon */}
+        <p className="card-text text-muted">
+          <FaMapMarkerAlt className="mr-2" />
+          {job.location}
+        </p>
+        
+        {/* Employment Type Icon */}
+        <p className="card-text">
+          <FaBriefcase className="mr-2" />
+          {job.employmentType}
+        </p>
+        
+        {/* Salary Icon */}
+        <p className="card-text font-weight-bold">
+          <FaDollarSign className="mr-2" />
+          {job.salaryRange || 'Salary not disclosed'}
+        </p>
 
         <div className="d-flex justify-content-between">
           <Link to={`/job-details/${job.id}`} className="btn btn-outline-primary btn-sm">

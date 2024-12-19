@@ -62,7 +62,7 @@ function AdminDashboard() {
             </li>
           ))}
           <li className="nav-item mt-auto">
-            <Link to="/logout" className="nav-link text-danger">
+            <Link to="/login" className="nav-link text-danger">
               <LogOut className="me-2" />
               {!isSidebarCollapsed && 'Logout'}
             </Link>

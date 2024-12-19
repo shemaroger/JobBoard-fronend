@@ -1,8 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaPlus, FaClipboardList, FaChartLine, FaUsers } from 'react-icons/fa';
 
 function EmployerDashboard() {
+  const navigate = useNavigate();
+
+  // Redirect to '/add-list' by default
+  useEffect(() => {
+    navigate('/add-list');
+  }, [navigate]);
+
   return (
     <div className="d-flex" style={{ height: '100vh' }}>
       {/* Sidebar */}
