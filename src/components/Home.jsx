@@ -5,7 +5,9 @@ import '../styles/Home.css';
 
 function Home() {
   const [jobs, setJobs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
+  // Fetch jobs from the API
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -19,27 +21,44 @@ function Home() {
     fetchJobs();
   }, []);
 
+  // Filter jobs based on search query
+  const filteredJobs = jobs.filter((job) =>
+    job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.employmentType.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="home">
       {/* Hero Section with Modern Look */}
       <div className="hero-section text-center py-5">
         <h1 className="display-3 text-light">Find Your Dream Job</h1>
         <p className="lead text-light mb-4">Start your journey with exciting job opportunities tailored to your expertise.</p>
+        
+        {/* Search Bar */}
+        <input
+          type="text"
+          className="form-control mb-4"
+          placeholder="Search jobs by title, location, or type"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+
         <Link to="/jobs" className="btn btn-lg btn-gradient">Explore Jobs</Link>
       </div>
 
       {/* Job Cards Section */}
       <div className="job-cards-container container py-5">
-        {jobs.length > 0 ? (
+        {filteredJobs.length > 0 ? (
           <div className="row">
-            {jobs.map((job) => (
+            {filteredJobs.map((job) => (
               <div key={job.id} className="col-md-4 mb-4">
                 <JobCard job={job} />
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center">Loading jobs...</p>
+          <p className="text-center">No jobs found matching your search criteria.</p>
         )}
       </div>
     </div>

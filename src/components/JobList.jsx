@@ -9,6 +9,8 @@ const JobList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobsPerPage] = useState(5); // Number of records per page
 
   const employerId = localStorage.getItem("loginUserId");
 
@@ -71,10 +73,21 @@ const JobList = () => {
     }
   };
 
+  // Pagination logic
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+
+  // Handle page change
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+
   return (
-    <div className="d-flex" style={{ height: '100vh' }}>
+    <div className="d-flex" style={{ height: "100vh" }}>
       {/* Sidebar */}
-      <div className="bg-dark text-white p-4" style={{ width: '250px' }}>
+      <div className="bg-dark text-white p-4" style={{ width: "250px" }}>
         <h2 className="mb-4">Employer Dashboard</h2>
         <nav>
           <ul className="list-unstyled">
@@ -104,7 +117,14 @@ const JobList = () => {
 
       {/* Main Content */}
       <div className="container mt-4" style={{ flex: 1 }}>
-        <h2>Job Listings</h2>
+        <div className="d-flex justify-content-between mb-3">
+          <h2>Job Listings</h2>
+          {/* Create New Job Button */}
+          <Link to="/job/add" className="btn btn-success d-flex align-items-center">
+            <FaPlus className="mr-2" /> Create New Job
+          </Link>
+        </div>
+
         {error && <div className="alert alert-danger">{error}</div>}
         <div className="mb-3">
           <input
@@ -117,7 +137,7 @@ const JobList = () => {
         </div>
         {isLoading ? (
           <p>Loading...</p>
-        ) : filteredJobs.length === 0 ? (
+        ) : currentJobs.length === 0 ? (
           <p>No jobs found matching your search.</p>
         ) : (
           <table className="table">
@@ -131,7 +151,7 @@ const JobList = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredJobs.map((job) => (
+              {currentJobs.map((job) => (
                 <tr key={job.id}>
                   <td>{job.title}</td>
                   <td>{job.location}</td>
@@ -156,6 +176,45 @@ const JobList = () => {
             </tbody>
           </table>
         )}
+
+        {/* Pagination Controls */}
+        <div className="d-flex justify-content-center mt-3">
+          <nav>
+            <ul className="pagination">
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+              </li>
+              {[...Array(totalPages)].map((_, index) => (
+                <li key={index} className="page-item">
+                  <button
+                    className="page-link"
+                    onClick={() => paginate(index + 1)}
+                    style={{
+                      fontWeight: currentPage === index + 1 ? "bold" : "normal",
+                    }}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+              <li className="page-item">
+                <button
+                  className="page-link"
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   );

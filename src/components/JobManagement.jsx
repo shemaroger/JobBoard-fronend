@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { FaPlus, FaClipboardList, FaUsers, FaChartLine, FaSave } from "react-icons/fa";
+import { FaPlus, FaClipboardList, FaUsers, FaChartLine } from "react-icons/fa";
 
 const AddJob = () => {
   const [jobDetails, setJobDetails] = useState({
@@ -212,8 +212,8 @@ const AddJob = () => {
                 </select>
               </div>
 
-              <button type="submit" className="btn btn-primary btn-block mt-3 d-flex align-items-center justify-content-center">
-                <FaSave className="mr-2" /> Add Job
+              <button type="submit" className="btn btn-primary btn-block mt-3">
+                Add Job
               </button>
             </form>
           </div>
